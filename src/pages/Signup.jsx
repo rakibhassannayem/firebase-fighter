@@ -5,10 +5,25 @@ import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
 
 import MyContainer from "../components/MyContainer";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/firebase.config";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const handleSignup = (e) => {
     e.preventDefault();
+
+    const email = e.target.email?.value;
+    const password = e.target.password?.value;
+
+    console.log("sign-up credentials:", { email, password });
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((res) => {
+        console.log(res);
+        toast.success("Sign up Successful");
+      })
+      .catch((err) => toast.error(err.message));
   };
 
   return (

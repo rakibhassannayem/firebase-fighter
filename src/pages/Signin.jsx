@@ -10,7 +10,7 @@ const Signin = () => {
 
   const handleGoogleSignin = () => {};
 
-  const handleSignout = () => {};
+  
 
   return (
     <div className="min-h-[calc(100vh-20px)] flex items-center justify-center bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 relative overflow-hidden">
