@@ -40,7 +40,36 @@ const Signin = () => {
         setUser(res.user);
         toast.success("Signed in Successfully");
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => {
+        if (err.code === "auth/email-already-in-use") {
+          toast.error("This email is already registered!");
+        } else if (err.code === "auth/invalid-email") {
+          toast.error("Invalid email format!");
+        } else if (err.code === "auth/operation-not-allowed") {
+          toast.error("Email/password accounts are not enabled!");
+        } else if (err.code === "auth/weak-password") {
+          toast.error("Password is too weak! Must be at least 6 characters.");
+        } else if (err.code === "auth/user-disabled") {
+          toast.error("This account has been disabled!");
+        } else if (err.code === "auth/user-not-found") {
+          toast.error("No account found with this email!");
+        } else if (err.code === "auth/wrong-password") {
+          toast.error("Incorrect password!");
+        } else if (err.code === "auth/missing-password") {
+          toast.error("Please enter your password!");
+        } else if (err.code === "auth/invalid-credential") {
+          toast.error("Invalid login credentials!");
+        } else if (err.code === "auth/too-many-requests") {
+          toast.error("Too many login attempts. Try again later!");
+        } else if (err.code === "auth/network-request-failed") {
+          toast.error("Network error. Please check your connection.");
+        } else if (err.code === "auth/missing-email") {
+          toast.error("Please enter your email!");
+        } else {
+          toast.error("Something went wrong. Please try again!");
+          console.error("Firebase Auth Error:", err);
+        }
+      });
   };
 
   const handleGoogleSignin = () => {
