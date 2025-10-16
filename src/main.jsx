@@ -8,6 +8,6 @@ import { ToastContainer } from "react-toastify";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
-    <ToastContainer autoClose={500}/>
+    <ToastContainer autoClose={1000}/>
   </StrictMode>
 );
