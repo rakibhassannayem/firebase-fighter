@@ -1,15 +1,15 @@
 import { Link } from "react-router";
-
 import { FaEye } from "react-icons/fa";
-
 import { IoEyeOff } from "react-icons/io5";
 
 import MyContainer from "../components/MyContainer";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase.config";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const Signup = () => {
+  const [showPass, setShowPass] = useState(false);
   const handleSignup = (e) => {
     e.preventDefault();
 
@@ -17,6 +17,15 @@ const Signup = () => {
     const password = e.target.password?.value;
 
     console.log("sign-up credentials:", { email, password });
+
+    const regExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+    if (!regExp.test(password)) {
+      toast.error(
+        "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character. Spaces are not allowed."
+      );
+      return;
+    }
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((res) => {
@@ -67,11 +76,18 @@ const Signup = () => {
                   Password
                 </label>
                 <input
-                  type={""}
+                  type={showPass ? "text" : "password"}
                   name="password"
                   placeholder="••••••••"
                   className="input input-bordered w-full bg-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-pink-400"
                 />
+
+                <span
+                  onClick={() => setShowPass(!showPass)}
+                  className="absolute right-3 bottom-3 cursor-pointer"
+                >
+                  {showPass ? <FaEye /> : <IoEyeOff />}
+                </span>
               </div>
 
               <button type="submit" className="my-btn">
