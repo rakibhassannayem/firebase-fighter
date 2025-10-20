@@ -5,6 +5,7 @@ import { IoEyeOff } from "react-icons/io5";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import {
+  GithubAuthProvider,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -13,6 +14,7 @@ import {
 import { auth } from "../firebase/firebase.config";
 
 const googleProvider = new GoogleAuthProvider();
+const provider = new GithubAuthProvider();
 
 const Signin = () => {
   const [user, setUser] = useState(null);
@@ -82,6 +84,16 @@ const Signin = () => {
       .catch((err) => toast.error(err.message));
   };
 
+  const handleGithubSignin = () => {
+    signInWithPopup(auth, provider)
+      .then((res) => {
+        console.log(res);
+        setUser(res.user);
+        toast.success("Signed in Successfully");
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -92,6 +104,7 @@ const Signin = () => {
         toast.error(e.message);
       });
   };
+
   return (
     <div className="min-h-[calc(100vh-20px)] flex items-center justify-center bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 relative overflow-hidden">
       {/* Animated glow orbs */}
@@ -182,6 +195,20 @@ const Signin = () => {
                     className="w-5 h-5"
                   />
                   Continue with Google
+                </button>
+
+                {/* Github Signin */}
+                <button
+                  type="button"
+                  onClick={handleGithubSignin}
+                  className="flex items-center justify-center gap-3 bg-white text-gray-800 px-5 py-2 rounded-lg w-full font-semibold hover:bg-gray-100 transition-colors cursor-pointer"
+                >
+                  <img
+                    src="https://www.svgrepo.com/show/448225/github.svg"
+                    alt="google"
+                    className="h-6"
+                  />
+                  Continue with GitHub
                 </button>
 
                 <p className="text-center text-sm text-white/80 mt-3">
