@@ -2,24 +2,20 @@ import { Link } from "react-router";
 import MyContainer from "../components/MyContainer";
 import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import {
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
-import { auth } from "../firebase/firebase.config";
-
-const googleProvider = new GoogleAuthProvider();
-const provider = new GithubAuthProvider();
+import { AuthContext } from "../context/AuthContext";
 
 const Signin = () => {
   const [user, setUser] = useState(null);
   const [showPass, setShowPass] = useState(false);
+  const {
+    signInWithEmailAndPasswordFunc,
+    sendPasswordResetEmailFunc,
+    signInWithPopupEmailFunc,
+    signInWithPopupGithubFuc,
+    signOutFunc,
+  } = useContext(AuthContext);
 
   const emailRef = useRef(null);
 
@@ -38,7 +34,7 @@ const Signin = () => {
       return;
     }
 
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPasswordFunc(email, password)
       .then((res) => {
         if (!res.user.emailVerified) {
           toast.error("Email not verified");
@@ -82,7 +78,7 @@ const Signin = () => {
 
   const handleForgorPass = () => {
     const email = emailRef.current.value;
-    sendPasswordResetEmail(auth, email)
+    sendPasswordResetEmailFunc(email)
       .then(() => {
         toast.success("check your email to reset password");
       })
@@ -92,7 +88,7 @@ const Signin = () => {
   };
 
   const handleGoogleSignin = () => {
-    signInWithPopup(auth, googleProvider)
+    signInWithPopupEmailFunc()
       .then((res) => {
         console.log(res);
         setUser(res.user);
@@ -102,7 +98,7 @@ const Signin = () => {
   };
 
   const handleGithubSignin = () => {
-    signInWithPopup(auth, provider)
+    signInWithPopupGithubFuc()
       .then((res) => {
         console.log(res);
         setUser(res.user);
@@ -112,7 +108,7 @@ const Signin = () => {
   };
 
   const handleSignOut = () => {
-    signOut(auth)
+    signOutFunc()
       .then(() => {
         toast.success("Signed out successfully");
         setUser(null);

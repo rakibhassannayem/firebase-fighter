@@ -3,17 +3,15 @@ import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
 
 import MyContainer from "../components/MyContainer";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  updateProfile,
-} from "firebase/auth";
-import { auth } from "../firebase/firebase.config";
+import { sendEmailVerification, updateProfile } from "firebase/auth";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Signup = () => {
   const [showPass, setShowPass] = useState(false);
+  const { createUserWithEmailAndPasswordFunc } = useContext(AuthContext);
+
   const handleSignup = (e) => {
     e.preventDefault();
 
@@ -32,17 +30,14 @@ const Signup = () => {
     }
 
     // create User
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPasswordFunc(email, password)
       .then((res) => {
-
         // update profile
         updateProfile(res.user, { displayName, photoURL })
           .then(() => {
-
             // email varification
             sendEmailVerification(res.user)
-              .then((res) => {
-                console.log(res)
+              .then(() => {
                 toast.success("Check your email to varify your account.");
               })
               .catch((e) => {
