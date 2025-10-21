@@ -8,8 +8,7 @@ import { toast } from "react-toastify";
 import { FadeLoader } from "react-spinners";
 
 const Navbar = () => {
-  const { user, setUser, signOutFunc, loading, setLoading } =
-    useContext(AuthContext);
+  const { user, setUser, signOutFunc, loading } = useContext(AuthContext);
 
   const handleSignOut = () => {
     signOutFunc()
@@ -35,9 +34,11 @@ const Navbar = () => {
           <li>
             <MyLink to={"/about-us"}>About US</MyLink>
           </li>
-          <li>
-            <MyLink to={"/profile"}>Profile</MyLink>
-          </li>
+          {user && (
+            <li>
+              <MyLink to={"/profile"}>Profile</MyLink>
+            </li>
+          )}
         </ul>
 
         {loading ? (

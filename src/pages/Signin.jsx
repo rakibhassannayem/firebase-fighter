@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import MyContainer from "../components/MyContainer";
 import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
@@ -8,7 +8,12 @@ import { AuthContext } from "../context/AuthContext";
 
 const Signin = () => {
   const [showPass, setShowPass] = useState(false);
+  const emailRef = useRef(null);
+  const location = useLocation();
+  const from = location.state || "/";
+  const navigate = useNavigate();
   const {
+    user,
     setUser,
     signInWithEmailAndPasswordFunc,
     sendPasswordResetEmailFunc,
@@ -17,13 +22,15 @@ const Signin = () => {
     setLoading,
   } = useContext(AuthContext);
 
-  const emailRef = useRef(null);
+  if (user) {
+    navigate("/");
+    return;
+  }
 
   const handleSignin = (e) => {
     e.preventDefault();
     const email = e.target.email?.value;
     const password = e.target.password?.value;
-    console.log("sign-up credentials:", { email, password });
 
     const regExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
     if (!regExp.test(password)) {
@@ -43,6 +50,7 @@ const Signin = () => {
         console.log(res);
         setUser(res.user);
         toast.success("Signed in Successfully");
+        navigate(from);
       })
       .catch((err) => {
         if (err.code === "auth/email-already-in-use") {
@@ -94,6 +102,7 @@ const Signin = () => {
         setLoading(false);
         setUser(res.user);
         toast.success("Signed in Successfully");
+        navigate(from);
       })
       .catch((err) => toast.error(err.message));
   };
@@ -104,6 +113,7 @@ const Signin = () => {
         setLoading(false);
         setUser(res.user);
         toast.success("Signed in Successfully");
+        navigate(from);
       })
       .catch((err) => toast.error(err.message));
   };
