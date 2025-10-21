@@ -3,7 +3,11 @@ import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
 
 import MyContainer from "../components/MyContainer";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "../firebase/firebase.config";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -27,12 +31,23 @@ const Signup = () => {
       return;
     }
 
+    // create User
     createUserWithEmailAndPassword(auth, email, password)
       .then((res) => {
+
+        // update profile
         updateProfile(res.user, { displayName, photoURL })
-          .then((res) => {
-            console.log(res);
-            toast.success("Sign up Successful");
+          .then(() => {
+
+            // email varification
+            sendEmailVerification(res.user)
+              .then((res) => {
+                console.log(res)
+                toast.success("Check your email to varify your account.");
+              })
+              .catch((e) => {
+                toast.error(e.message);
+              });
           })
           .catch((e) => {
             toast.error(e.message);

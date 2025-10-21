@@ -2,11 +2,12 @@ import { Link } from "react-router";
 import MyContainer from "../components/MyContainer";
 import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import {
   GithubAuthProvider,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -20,9 +21,10 @@ const Signin = () => {
   const [user, setUser] = useState(null);
   const [showPass, setShowPass] = useState(false);
 
+  const emailRef = useRef(null);
+
   const handleSignin = (e) => {
     e.preventDefault();
-
     const email = e.target.email?.value;
     const password = e.target.password?.value;
     console.log("sign-up credentials:", { email, password });
@@ -38,6 +40,10 @@ const Signin = () => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((res) => {
+        if (!res.user.emailVerified) {
+          toast.error("Email not verified");
+          return;
+        }
         console.log(res);
         setUser(res.user);
         toast.success("Signed in Successfully");
@@ -71,6 +77,17 @@ const Signin = () => {
           toast.error("Something went wrong. Please try again!");
           console.error("Firebase Auth Error:", err);
         }
+      });
+  };
+
+  const handleForgorPass = () => {
+    const email = emailRef.current.value;
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        toast.success("check your email to reset password");
+      })
+      .catch((err) => {
+        toast.error(err.message);
       });
   };
 
@@ -151,6 +168,7 @@ const Signin = () => {
                   <input
                     type="email"
                     name="email"
+                    ref={emailRef}
                     placeholder="example@email.com"
                     className="input input-bordered w-full bg-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
@@ -172,6 +190,13 @@ const Signin = () => {
                   </span>
                 </div>
 
+                <button
+                  type="button"
+                  onClick={handleForgorPass}
+                  className="hover:underline cursor-pointer"
+                >
+                  Forgot password?
+                </button>
                 <button type="submit" className="my-btn">
                   Login
                 </button>
