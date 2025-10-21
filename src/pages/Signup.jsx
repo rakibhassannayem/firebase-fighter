@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
 
@@ -13,7 +13,11 @@ const Signup = () => {
     createUserWithEmailAndPasswordFunc,
     updateProfileFunc,
     sendEmailVerificationFunc,
+    setLoading,
+    signOutFunc,
+    setUser,
   } = useContext(AuthContext);
+  const navigate = useNavigate()
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -41,7 +45,16 @@ const Signup = () => {
             // email varification
             sendEmailVerificationFunc()
               .then(() => {
-                toast.success("Check your email to varify your account.");
+                setLoading(false);
+                signOutFunc()
+                  .then(() => {
+                    toast.success("Check your email to varify your account.");
+                    setUser(null);
+                    navigate('/signin')
+                  })
+                  .catch((e) => {
+                    toast.error(e.message);
+                  });
               })
               .catch((e) => {
                 toast.error(e.message);

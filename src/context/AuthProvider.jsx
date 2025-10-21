@@ -22,26 +22,32 @@ const AuthProvider = ({ children }) => {
   const provider = new GithubAuthProvider();
 
   const createUserWithEmailAndPasswordFunc = (email, password) => {
+    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
   const signInWithEmailAndPasswordFunc = (email, password) => {
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   const sendPasswordResetEmailFunc = (email) => {
+    setLoading(true);
     return sendPasswordResetEmail(auth, email);
   };
 
   const signInWithPopupEmailFunc = () => {
+    setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
   const signInWithPopupGithubFuc = () => {
+    setLoading(true);
     return signInWithPopup(auth, provider);
   };
 
   const signOutFunc = () => {
+    setLoading(true);
     return signOut(auth);
   };
 

@@ -14,6 +14,7 @@ const Signin = () => {
     sendPasswordResetEmailFunc,
     signInWithPopupEmailFunc,
     signInWithPopupGithubFuc,
+    setLoading,
   } = useContext(AuthContext);
 
   const emailRef = useRef(null);
@@ -25,7 +26,6 @@ const Signin = () => {
     console.log("sign-up credentials:", { email, password });
 
     const regExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
-
     if (!regExp.test(password)) {
       toast.error(
         "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character. Spaces are not allowed."
@@ -37,6 +37,7 @@ const Signin = () => {
       .then((res) => {
         if (!res.user.emailVerified) {
           toast.error("Email not verified");
+          setLoading(false);
           return;
         }
         console.log(res);
@@ -79,6 +80,7 @@ const Signin = () => {
     const email = emailRef.current.value;
     sendPasswordResetEmailFunc(email)
       .then(() => {
+        setLoading(false);
         toast.success("check your email to reset password");
       })
       .catch((err) => {
@@ -89,7 +91,7 @@ const Signin = () => {
   const handleGoogleSignin = () => {
     signInWithPopupEmailFunc()
       .then((res) => {
-        console.log(res);
+        setLoading(false);
         setUser(res.user);
         toast.success("Signed in Successfully");
       })
@@ -99,7 +101,7 @@ const Signin = () => {
   const handleGithubSignin = () => {
     signInWithPopupGithubFuc()
       .then((res) => {
-        console.log(res);
+        setLoading(false);
         setUser(res.user);
         toast.success("Signed in Successfully");
       })
