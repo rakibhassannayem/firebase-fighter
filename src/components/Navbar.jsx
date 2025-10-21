@@ -4,10 +4,22 @@ import MyContainer from "./MyContainer";
 import MyLink from "./MyLink";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
-  console.log(user)
+  const { user, setUser, signOutFunc } = useContext(AuthContext);
+
+  const handleSignOut = () => {
+    signOutFunc()
+      .then(() => {
+        toast.success("Signed out successfully");
+        setUser(null);
+      })
+      .catch((e) => {
+        toast.error(e.message);
+      });
+  };
+
   return (
     <div className="bg-slate-100f py-2 border-b border-b-slate-300 ">
       <MyContainer className="flex items-center justify-between">
@@ -26,9 +38,45 @@ const Navbar = () => {
           </li>
         </ul>
 
-        <button className="bg-purple-500 text-white px-4 py-2 rounded-md font-semibold cursor-pointer">
-          <Link to={"/signin"}>Sign in</Link>
-        </button>
+        {user ? (
+          <div>
+            <button
+              className="cursor-pointer hover:scale-105 transition"
+              popoverTarget="popover-1"
+              style={{ anchorName: "--anchor-1" }}
+            >
+              <img
+                src={user?.photoURL || "https://via.placeholder.com/88"}
+                className="h-12 rounded"
+              />
+            </button>
+
+            <ul
+              className="dropdown dropdown-end bg-base-100 shadow-sm p-2 rounded-lg space-y-1 text-right"
+              popover="auto"
+              id="popover-1"
+              style={
+                { positionAnchor: "--anchor-1" } /* as React.CSSProperties */
+              }
+            >
+              <li>
+                <h2 className="text-2xl font-semibold">{user?.displayName}</h2>
+              </li>
+              <li>
+                <p className="text-white/80">{user?.email}</p>
+              </li>
+              <li>
+                <button onClick={handleSignOut} className="my-btn">
+                  Sign Out
+                </button>
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <button className="bg-purple-500 text-white px-4 py-2 rounded-md font-semibold cursor-pointer">
+            <Link to={"/signin"}>Sign in</Link>
+          </button>
+        )}
       </MyContainer>
     </div>
   );

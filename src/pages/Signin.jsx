@@ -9,13 +9,11 @@ import { AuthContext } from "../context/AuthContext";
 const Signin = () => {
   const [showPass, setShowPass] = useState(false);
   const {
-    user,
     setUser,
     signInWithEmailAndPasswordFunc,
     sendPasswordResetEmailFunc,
     signInWithPopupEmailFunc,
     signInWithPopupGithubFuc,
-    signOutFunc,
   } = useContext(AuthContext);
 
   const emailRef = useRef(null);
@@ -108,17 +106,6 @@ const Signin = () => {
       .catch((err) => toast.error(err.message));
   };
 
-  const handleSignOut = () => {
-    signOutFunc()
-      .then(() => {
-        toast.success("Signed out successfully");
-        setUser(null);
-      })
-      .catch((e) => {
-        toast.error(e.message);
-      });
-  };
-
   return (
     <div className="min-h-[calc(100vh-20px)] flex items-center justify-center bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 relative overflow-hidden">
       {/* Animated glow orbs */}
@@ -142,19 +129,7 @@ const Signin = () => {
 
           {/* Login card */}
           <div className="w-full max-w-md backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-8">
-            {user ? (
-              <div className="text-center space-y-3">
-                <img
-                  src={user?.photoURL || "https://via.placeholder.com/88"}
-                  className="h-20 w-20 rounded-full mx-auto"
-                />
-                <h2 className="text-2xl font-semibold">{user?.displayName}</h2>
-                <p className="text-white/80">{user?.email}</p>
-                <button onClick={handleSignOut} className="my-btn">
-                  Sign Out
-                </button>
-              </div>
-            ) : (
+            {
               <form onSubmit={handleSignin} className="space-y-5">
                 <h2 className="text-2xl font-semibold mb-2 text-center text-white">
                   Sign In
@@ -243,7 +218,7 @@ const Signin = () => {
                   </Link>
                 </p>
               </form>
-            )}
+            }
           </div>
         </div>
       </MyContainer>

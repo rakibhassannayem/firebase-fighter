@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   GithubAuthProvider,
   GoogleAuthProvider,
+  onAuthStateChanged,
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -63,6 +64,10 @@ const AuthProvider = ({ children }) => {
     updateProfileFunc,
     sendEmailVerificationFunc,
   };
+
+  onAuthStateChanged(auth, (currUser)=>{
+    setUser(currUser)
+  })
 
   return <AuthContext value={authInfo}>{children}</AuthContext>;
 };
