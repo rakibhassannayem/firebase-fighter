@@ -2,8 +2,12 @@ import { Link } from "react-router";
 import logo from "../assets/img/firebase-logo.png";
 import MyContainer from "./MyContainer";
 import MyLink from "./MyLink";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
+  const { user } = useContext(AuthContext);
+  console.log(user)
   return (
     <div className="bg-slate-100f py-2 border-b border-b-slate-300 ">
       <MyContainer className="flex items-center justify-between">
@@ -12,7 +16,6 @@ const Navbar = () => {
         </figure>
         <ul className="flex items-center gap-2">
           <li>
-            
             <MyLink to={"/"}>Home</MyLink>
           </li>
           <li>

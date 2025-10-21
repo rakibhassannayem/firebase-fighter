@@ -7,9 +7,10 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../context/AuthContext";
 
 const Signin = () => {
-  const [user, setUser] = useState(null);
   const [showPass, setShowPass] = useState(false);
   const {
+    user,
+    setUser,
     signInWithEmailAndPasswordFunc,
     sendPasswordResetEmailFunc,
     signInWithPopupEmailFunc,

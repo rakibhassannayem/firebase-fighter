@@ -4,10 +4,12 @@ import {
   createUserWithEmailAndPassword,
   GithubAuthProvider,
   GoogleAuthProvider,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebase/firebase.config";
 
@@ -41,6 +43,14 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
+  const updateProfileFunc = (displayName, photoURL) => {
+    return updateProfile(auth.currentUser, { displayName, photoURL });
+  };
+
+  const sendEmailVerificationFunc = () => {
+    return sendEmailVerification(auth.currentUser);
+  };
+
   const authInfo = {
     user,
     setUser,
@@ -50,6 +60,8 @@ const AuthProvider = ({ children }) => {
     signInWithPopupEmailFunc,
     signInWithPopupGithubFuc,
     signOutFunc,
+    updateProfileFunc,
+    sendEmailVerificationFunc,
   };
 
   return <AuthContext value={authInfo}>{children}</AuthContext>;
