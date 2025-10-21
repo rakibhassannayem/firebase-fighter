@@ -5,9 +5,11 @@ import MyLink from "./MyLink";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import { FadeLoader } from "react-spinners";
 
 const Navbar = () => {
-  const { user, setUser, signOutFunc } = useContext(AuthContext);
+  const { user, setUser, signOutFunc, loading, setLoading } =
+    useContext(AuthContext);
 
   const handleSignOut = () => {
     signOutFunc()
@@ -38,7 +40,9 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {user ? (
+        {loading ? (
+          <FadeLoader color="violet" />
+        ) : user ? (
           <div>
             <button
               className="cursor-pointer hover:scale-105 transition"
